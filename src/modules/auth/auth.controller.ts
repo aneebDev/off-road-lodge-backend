@@ -41,70 +41,6 @@ export class AuthController {
     return this.authService.signup(signUpUserDto)
   }
 
-  // //  international user document passport
-  //  @ApiBody({type:SignupUserDocumentDto})
-  //  @Post('/international/user_document_passport')
-  //  async internationalUserDocumentPassport(@Body() body:SignupUserDocumentDto )
-  //  {
-  //      return this.authService.UserDocument(body);
-  //  }
-
-  // //  international user document visa
-  // @ApiBody({type:SignupUserDocumentDto})
-  // @Post('/international/user_document_visa')
-  // async internationalUserDocumentVisa(@Body() body:SignupUserDocumentDto )
-  // {
-  //     return this.authService.UserDocument(body);
-  // }
-
-  // //  international user driving license
-  //  @ApiBody({type:SignupUserDocumentDto})
-  //  @Post('/international/user_document_driving_license')
-  //  async internationalUserDocumentDrivingLicense(@Body() body:SignupUserDocumentDto )
-  //  {
-  //      return this.authService.UserDocument(body);
-  //  }
-
-  // //  international user driving permit
-  // @ApiBody({type:SignupUserDocumentDto})
-  // @Post('/international/user_document_driving_permit')
-  // async internationalUserDocumentDrivingPermit(@Body() body:SignupUserDocumentDto )
-  // {
-  //     return this.authService.UserDocument(body);
-  // }
-
-  // //  local user document passport
-  // @ApiBody({type:SignupUserDocumentDto})
-  // @Post('/local/user_document_passport')
-  // async localUserDocumentPassport(@Body() body:SignupUserDocumentDto )
-  // {
-  //     return this.authService.UserDocument(body);
-  // }
-
-  // //  local user driving license
-  // @ApiBody({type:SignupUserDocumentDto})
-  // @Post('/local/user_document_driving_license')
-  // async localUserDocumentDrivingLicense(@Body() body:SignupUserDocumentDto )
-  // {
-  //   return this.authService.UserDocument(body);
-  // }
-
-  // // user update ( otp active status)
-  // @ApiBody({type:userOtpActiveDto})
-  // @Patch('otp_active/:email')
-  // async isOtpActive(@Param('email') email:string,@Body() userOtpActivedto: userOtpActiveDto)
-  // {
-  //     return this.authService.isOtpActive(email,userOtpActivedto);
-  // }
-
-  // // user  document update
-  // @ApiBody({type:userDocumentActiveDto})
-  // @Patch('document_active/:documentId')
-  // async isDocumentActive(@Param('documentId') documentId:string,@Body() UserDocumentActiveDto: userDocumentActiveDto):Promise<{ message: string, updateResult:UserDocuments}>
-  // {
-  //      return this.authService.isDocumentActive(documentId,UserDocumentActiveDto);
-  // }
-
   // login
   @SwaggerLogin()
   @UseGuards(LocalAuthGuard)
@@ -121,7 +57,7 @@ export class AuthController {
     return this.authService.getProfile(accessToken)
   }
 
-  // sign up with google
+  // sign up with Google
   @Get('google')
   @UseGuards(GoogleAuthGuard)
   async googleAuth(@Req() req) {
@@ -132,7 +68,7 @@ export class AuthController {
   // get data from google ( signup)
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
-  googleAuthRedirect(@Req() req) {
+  googleAuthRedirect(@Req() req: Request) {
     return this.authService.googleLogin(req)
   }
 
@@ -215,7 +151,7 @@ export class AuthController {
   //  {
   //    if (payload.id_token)
   //    {
-  //      return this.authService.registerByIDtoken(payload);
+  //      return this.authService.registerByIDToken(payload);
   //    }
   //     throw new UnauthorizedException('Unauthorized');
   //  }

@@ -17,10 +17,10 @@ export const envSchema = Joi.object({
   GOOGLE_CLIENT_ID: Joi.string().required().description('Google app Client ID'),
   GOOGLE_CLIENT_SECRET: Joi.string().required().description('Google app Client Secret'),
   GOOGLE_CALLBACK_URL: Joi.string().required().description('Google Auth Callback url'),
-  BASE_URL: Joi.string().required().description('Base url'),
-  HUBSPOT_ACCESS_TOKEN: Joi.string().required().description('hubspot token'),
-  HUBSPOT_ACCESS_APIURL: Joi.string().required().description('hubspot api url'),
-  OTP_EXPIRY: Joi.string().required().description('OTP Expiry')
+  BASE_URL: Joi.string().required().description('Base url')
+  // HUBSPOT_ACCESS_TOKEN: Joi.string().required().description('hubspot token'),
+  // HUBSPOT_ACCESS_APIURL: Joi.string().required().description('hubspot api url'),
+  // OTP_EXPIRY: Joi.string().required().description('OTP Expiry')
   // APPLE_CLIENTID: Joi.string().required().description("APPLE_CLIENTID"),
   // APPLE_TEAMID: Joi.string().required().description("APPLE_TEAMID"),
   // APPLE_KEYID: Joi.string().required().description("APPLE_KEYID"),

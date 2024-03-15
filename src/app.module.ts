@@ -44,7 +44,7 @@ import { MailModule } from './modules/mail/mail.module'
       useFactory: async (configService: ConfigService) => ({
         transport: {
           host: configService.get('MAILER_HOST'),
-          port: 465,
+          port: 587,
           auth: {
             user: configService.get('MAIL_USER'),
             pass: configService.get('MAILER_PASSWORD')

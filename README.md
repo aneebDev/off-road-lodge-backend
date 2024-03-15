@@ -47,7 +47,7 @@ $ npm run start:dev
 
 ```bash
 # swagger backend path
-http://localhost:3000/api
+http://localhost:5000/api
 
 ```
 

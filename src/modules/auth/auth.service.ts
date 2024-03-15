@@ -2,13 +2,13 @@ import {
   BadRequestException,
   Body,
   ConflictException,
+  Injectable,
   NotAcceptableException,
   NotFoundException,
   UnauthorizedException
 } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import { User } from '../users/schemas/user.schema'
-import { MailerService } from '@nestjs-modules/mailer'
 import JwtTokensInterface from './interfaces/jwt-token.interface'
 import * as handlebars from 'handlebars'
 import * as fs from 'fs'
@@ -19,22 +19,20 @@ import signupUserInterface from './interfaces/signup-user.interface'
 import randomUserTokenInterface from './interfaces/random-user-token.dto'
 import { UsersService } from '../users/users.service'
 import { ConfigService } from '@nestjs/config'
-import * as twilio from 'twilio'
-import { TwilioService } from 'nestjs-twilio'
+// import * as twilio from 'twilio'
+// import { TwilioService } from 'nestjs-twilio'
 import { UsersRepository } from '../users/users.respository'
 import { JwtService } from '@nestjs/jwt'
 import { MailService } from '../mail/mail.service'
 import { cacheRepository } from '../../cache/cache.repository'
 import userRolesUpdatedInterface from './interfaces/user-roles-updated.interface'
 
-// @Injectable()
+@Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private usersService: UsersService,
-    private readonly mailerService: MailerService,
     private readonly configService: ConfigService,
-    private readonly twilioService: TwilioService,
     private readonly usersRepository: UsersRepository,
     private readonly mailService: MailService,
     private readonly CacheRepository: cacheRepository // private readonly countryService: CountryService, // private readonly UserVerificationsDocumentsService: userVerificationsDocumentsService,
@@ -59,42 +57,11 @@ export class AuthService {
       throw new BadRequestException('Password is too weak')
     }
 
-    await this.usersService.createUser({
+    const user = await this.usersService.createUser({
       ...Signup,
       password: await AuthService.hashPassword(Signup.password)
     })
-    // const base64Data = user.image;
-    // const base64image = base64Data.split(';base64,').pop();
-    // const pdfBuffer = Buffer.from(base64image, 'base64');
-    //
-    // const savePath = path.join(
-    //   __dirname,
-    //   '../../../..',
-    //   '/asset/',
-    //   `${user.firstName}-${user.lastName}.png`
-    // );
-    // fs.writeFileSync(savePath, pdfBuffer);
-    //
-    // const Otp =generateRandomOtp(6)
-    // const OtpKey = `Otp-token:${user.email}`;
-    // const OtpValue = JSON.stringify({ token: Otp, active: false, });
-    // await this.CacheRepository.Cacheset(OtpKey, OtpValue, { ttl: Otpexpires });
-    // console.log(Otp)
-    // const adminEmail=this.configService.get("ADMIN_EMAIL")
-    // const template = handlebars.compile(fs.readFileSync('src/templates/adminEmail.html', 'utf8'),);
-    // const emailBody = template({adminEmail , name: user.firstName, userEmail: user.email});
-    // const mailData: any = {
-    //   to: adminEmail,
-    //   from: process.env.MAIL_FROM,
-    //   subject: "New Signup",
-    //   content: "Process is completed successfully",
-    //   cc: "",
-    //   bcc: "",
-    //   template: emailBody
-    // };
-    //
-    //   this.mailService.sendMail(mailData);
-    //   await  this.sendOtp(user.phoneNo,Otp)
+    console.log(user)
     return { message: 'Successfully Sign Up!' }
   }
 
@@ -264,7 +231,7 @@ export class AuthService {
       bcc: '',
       template: emailBody
     }
-    this.mailService.sendMail(mailData)
+    await this.mailService.sendMail(mailData)
     return {
       message: 'Please check your email to reset your password!',
       tokenStatus: true
@@ -307,12 +274,12 @@ export class AuthService {
     const logo_rentACar = process.env.LOGO_rentACar
     const contact_us_url = process.env.CONTACT_US
     const privacy_policy_url = process.env.PRIVACY_POLICY
-    const user = await this.usersService.findUserByEmail(email)
-    if (!user) {
+    const userChangePassword = await this.usersService.findUserByEmail(email)
+    if (!userChangePassword) {
       throw new NotFoundException('Invalid email')
     }
 
-    const tokenKey = `forgot-password-token:${user.email}`
+    const tokenKey = `forgot-password-token:${userChangePassword.email}`
     const cachedToken = await this.CacheRepository.Cacheget(tokenKey)
     if (!cachedToken) {
       throw new UnauthorizedException('token expired')
@@ -341,13 +308,13 @@ export class AuthService {
     )
     const emailBody = template({
       email,
-      username: user.firstName,
+      username: userChangePassword.firstName,
       contact_us_url,
       privacy_policy_url,
       logo_rentACar
     })
     const mailData: any = {
-      to: user.email,
+      to: userChangePassword.email,
       from: process.env.MAIL_FROM,
       subject: 'Success: Your password has been reset!',
       content: 'Process is completed successfully',
@@ -357,8 +324,8 @@ export class AuthService {
     }
     if (parsedToken.active == true) {
       await this.usersService.updatePassword(email, hashedPassword)
-      this.mailService.sendMail(mailData)
-      const loginResult = this.login(user)
+      await this.mailService.sendMail(mailData)
+      const loginResult = this.login(userChangePassword)
       await this.CacheRepository.Cachedel(tokenKey)
       return loginResult
     } else {
@@ -372,20 +339,20 @@ export class AuthService {
     return bcrypt.hash(password, salt)
   }
 
-  // send Otp
-  async sendOtp(phone_no: any, Otp: any) {
-    const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN)
-    try {
-      await twilioClient.messages.create({
-        to: phone_no,
-        from: process.env.TWILIO_PHONE_NUMBER,
-        body: `Your verification OTP is: ${Otp}`
-      })
-    } catch (error) {
-      console.log(error)
-      throw new BadRequestException('Failed to send OTP')
-    }
-  }
+  // // send Otp
+  // async sendOtp(phone_no: any, Otp: any) {
+  //   const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN)
+  //   try {
+  //     await twilioClient.messages.create({
+  //       to: phone_no,
+  //       from: process.env.TWILIO_PHONE_NUMBER,
+  //       body: `Your verification OTP is: ${Otp}`
+  //     })
+  //   } catch (error) {
+  //     console.log(error)
+  //     throw new BadRequestException('Failed to send OTP')
+  //   }
+  // }
 
   //used for validation purpose
   async validateUser(email: string, password: string): Promise<User> {
@@ -403,12 +370,12 @@ export class AuthService {
 
   // user roles  updated ( renter ,customer)
   async rolesActive(userId: string, @Body() reqBody: userRolesUpdatedInterface): Promise<User> {
-    const result = await this.usersService.rolesActive(userId, reqBody.roles)
-    return result
+    const roleUser = await this.usersService.rolesActive(userId, reqBody.roles)
+    return roleUser
   }
 
   //apple
-  // async registerByIDtoken(payload: any)
+  // async registerByIDToken(payload: any)
   // {
   //   if(payload.hasOwnProperty('id_token')){
   //

@@ -2,15 +2,6 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateCol
 import { ApiProperty } from '@nestjs/swagger'
 import { Role } from '../../../enums/role.enum'
 
-// export enum otpStatus {
-//      ACTIVE= 'true',
-//      INACTIVE = 'false',
-// }
-
-// export enum blockStatus {
-//      BLOCK= 'block',
-//      UNBLOCK = 'unblock',
-// }
 export enum status {
   ACTIVE = 'active',
   INACTIVE = 'inactive'
@@ -29,16 +20,6 @@ export class User {
   @ApiProperty()
   @Column({ nullable: true })
   lastName: string
-
-  //
-  // @ApiProperty()
-  // @Column({nullable:true  })
-  // countryId: string;
-  //
-  //
-  // @ApiProperty()
-  // @Column({nullable:true, type: 'date'})
-  // dateOfBirth: Date;
 
   @ApiProperty()
   @Column({ nullable: true })

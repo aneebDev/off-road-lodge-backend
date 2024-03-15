@@ -13,7 +13,7 @@ export class UsersService {
     return this.usersRepository.findUserByEmail(email)
   }
 
-  // create user
+  // create User
   async createUser(user: CreateUserDto): Promise<User | null> {
     return this.usersRepository.createUser(user)
   }
