@@ -102,6 +102,7 @@ export class AuthService {
     return await this.usersService.findUserById(userId)
   }
 
+
   // get data from google ( signup)
   async googleLogin(req: any) {
     if (!req.user) {
