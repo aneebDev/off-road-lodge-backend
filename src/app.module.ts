@@ -13,6 +13,10 @@ import { join } from 'path'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { User } from './modules/users/schemas/user.schema'
 import { MailModule } from './modules/mail/mail.module'
+import { FaqsModule } from './modules/faqs/faqs.module';
+import { ContactUsModule } from './modules/contact-us/contact-us.module';
+import { ContactUs } from './modules/contact-us/entities/contact-us.entity'
+import { Faq } from './modules/faqs/entities/faq.entity'
 
 @Module({
   imports: [
@@ -75,11 +79,15 @@ import { MailModule } from './modules/mail/mail.module'
         username: configService.get('DATABASE_USERNAME'),
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
-        entities: [User],
+        entities: [User, ContactUs, Faq],
         synchronize: true
       }),
       inject: [ConfigService]
-    })
+    }),
+
+    FaqsModule,
+
+    ContactUsModule
   ],
   controllers: [],
   providers: [GoogleStrategy]
