@@ -8,66 +8,53 @@ import { ContactUs } from './entities/contact-us.entity'
 import { CreateContactUsDto } from './dto/create-contact-us.dto'
 import { UpdateContactUsDto } from './dto/update-contact-us.dto'
 
-
 @Injectable()
 export class ContactUsRepository {
-  constructor(
-    @InjectRepository(ContactUs) private contactUsModel: Repository<ContactUs>,
-  ) {
-  }
+  constructor(@InjectRepository(ContactUs) private contactUsModel: Repository<ContactUs>) {}
 
   // create subject
   async create(createContactUsDto: CreateContactUsDto): Promise<ContactUs> {
-    return this.contactUsModel.save(createContactUsDto);
+    return this.contactUsModel.save(createContactUsDto)
   }
 
   // get all subjects for User
   async findAll(
-    whereCondition:
-      | FindOptionsWhere<ContactUs>[]
-      | FindOptionsWhere<ContactUs> = null,
+    whereCondition: FindOptionsWhere<ContactUs>[] | FindOptionsWhere<ContactUs> = null,
     relationShips: string[] = [],
     order: FindOptionsOrder<ContactUs> = {},
-    select: FindOptionsSelect<ContactUs> = {},
+    select: FindOptionsSelect<ContactUs> = {}
   ): Promise<ContactUs[]> {
     return this.contactUsModel.find({
       where: whereCondition,
       relations: relationShips,
       order: order,
-      select: select,
-    });
+      select: select
+    })
   }
 
   // get one subject by id for User
   async findOneById(
-    whereCondition:
-      | FindOptionsWhere<ContactUs>[]
-      | FindOptionsWhere<ContactUs> = undefined,
-    relationships: string[] = [],
+    whereCondition: FindOptionsWhere<ContactUs>[] | FindOptionsWhere<ContactUs> = undefined,
+    relationships: string[] = []
   ): Promise<ContactUs | null> {
     return this.contactUsModel.findOne({
       where: whereCondition ? whereCondition : {},
-      relations: relationships,
-    });
+      relations: relationships
+    })
   }
 
-  async update(
-    id: string,
-    updateContactUsDto: UpdateContactUsDto,
-  ): Promise<UpdateResult> {
-    return await this.contactUsModel.update({ id }, updateContactUsDto);
+  async update(id: string, updateContactUsDto: UpdateContactUsDto): Promise<UpdateResult> {
+    return await this.contactUsModel.update({ id }, updateContactUsDto)
   }
 
   async delete(
-    whereCondition:
-      | FindOptionsWhere<ContactUs>[]
-      | FindOptionsWhere<ContactUs> = undefined,
+    whereCondition: FindOptionsWhere<ContactUs>[] | FindOptionsWhere<ContactUs> = undefined
   ): Promise<ContactUs | null> {
-    const contact = await this.contactUsModel.findOne({ where: whereCondition });
+    const contact = await this.contactUsModel.findOne({ where: whereCondition })
     if (!contact) {
-      return null;
+      return null
     }
-    await this.contactUsModel.remove(contact);
-    return contact;
+    await this.contactUsModel.remove(contact)
+    return contact
   }
 }

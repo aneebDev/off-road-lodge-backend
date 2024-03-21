@@ -30,15 +30,13 @@ export class ContactUsController {
   @Roles(Role.CUSTOMER)
   @Post('/')
   async create(@Body() createContactUsDto: CreateContactUsDto) {
-
     try {
-      const contactUs: ContactUs =
-        await this.contactUsService.create(createContactUsDto)
+      const contactUs: ContactUs = await this.contactUsService.create(createContactUsDto)
       return {
         statusCode: 201,
         message: 'ContactUs created successfully',
-        data: { contactUs },
-      };
+        data: { contactUs }
+      }
     } catch (e) {
       return { statusCode: 400, message: e.message, data: {} }
     }
@@ -56,8 +54,8 @@ export class ContactUsController {
     return {
       statusCode: 200,
       message: 'ContactUs fetched successfully',
-      contactUs,
-    };
+      contactUs
+    }
   }
 
   @ApiBearerAuth()
@@ -72,58 +70,26 @@ export class ContactUsController {
     return {
       statusCode: 200,
       message: 'ContactUs fetched successfully',
-      contactUs,
-    };
+      contactUs
+    }
   }
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Roles(Role.CUSTOMER)
   @Patch('/:id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateContactUsDto: UpdateContactUsDto,
-  ) {
+  async update(@Param('id') id: string, @Body() updateContactUsDto: UpdateContactUsDto) {
     const UpdateResult = await this.contactUsService.update(id, updateContactUsDto)
-    console.log("UpdateResult<<<<<",UpdateResult)
+    console.log('UpdateResult<<<<<', UpdateResult)
     if (!UpdateResult) {
       throw new NotFoundException('ContactUs does not exist')
     }
     return {
       statusCode: 200,
       message: 'ContactUs updated successfully',
-      UpdateResult,
-    };
+      UpdateResult
+    }
   }
-
-  // @ApiBearerAuth() // Indicate that Bearer token is required
-  // @UseGuards(JwtAuthGuard) // Protect the route with JWT authentication
-  // @Roles(Role.CUSTOMER) // Restrict access to users with CUSTOMER role
-  // @Patch('/:id') // Use PATCH method for updating a resource
-  // async update(
-  //   @Param('id') id: string,
-  //   @Body() updateContactUsDto: UpdateContactUsDto,
-  // ): Promise<any> {
-  //   try {
-  //     const contactUs: ContactUs = await this.contactUsService.update(id, updateContactUsDto);
-  //     if (!contactUs) {
-  //       throw new NotFoundException('ContactUs does not exist');
-  //     }
-  //     return {
-  //       statusCode: 200,
-  //       message: 'ContactUs updated successfully',
-  //       contactUs,
-  //     };
-  //   } catch (error) {
-  //     // Handle errors appropriately
-  //     if (error instanceof NotFoundException) {
-  //       throw error; // Re-throw NotFoundException
-  //     } else {
-  //       // Handle other types of errors
-  //       throw new InternalServerErrorException('Failed to update ContactUs'); // Example of handling other errors
-  //     }
-  //   }
-  // }
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
@@ -137,7 +103,7 @@ export class ContactUsController {
     return {
       statusCode: 200,
       message: 'ContactUs deleted successfully',
-      contactUs,
+      contactUs
     }
   }
 }

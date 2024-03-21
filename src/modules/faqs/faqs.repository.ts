@@ -10,63 +10,51 @@ import { UpdateFaqDto } from './dto/update-faq.dto'
 
 @Injectable()
 export class FaqsRepository {
-  constructor(
-    @InjectRepository(Faq) private faqModel: Repository<Faq>,
-  ) {
-  }
+  constructor(@InjectRepository(Faq) private faqModel: Repository<Faq>) {}
 
   // create FAQ
   async create(createFaqDto: CreateFaqDto): Promise<Faq> {
-    return this.faqModel.save(createFaqDto);
+    return this.faqModel.save(createFaqDto)
   }
 
   // get all FAQ
   async findAll(
-    whereCondition:
-      | FindOptionsWhere<Faq>[]
-      | FindOptionsWhere<Faq> = null,
+    whereCondition: FindOptionsWhere<Faq>[] | FindOptionsWhere<Faq> = null,
     relationShips: string[] = [],
     order: FindOptionsOrder<Faq> = {},
-    select: FindOptionsSelect<Faq> = {},
+    select: FindOptionsSelect<Faq> = {}
   ): Promise<Faq[]> {
     return this.faqModel.find({
       where: whereCondition,
       relations: relationShips,
       order: order,
-      select: select,
-    });
+      select: select
+    })
   }
 
   // get one FAQ by id
   async findOneById(
-    whereCondition:
-      | FindOptionsWhere<Faq>[]
-      | FindOptionsWhere<Faq> = undefined,
-    relationships: string[] = [],
+    whereCondition: FindOptionsWhere<Faq>[] | FindOptionsWhere<Faq> = undefined,
+    relationships: string[] = []
   ): Promise<Faq | null> {
     return this.faqModel.findOne({
       where: whereCondition ? whereCondition : {},
-      relations: relationships,
-    });
+      relations: relationships
+    })
   }
 
-  async update(
-    id: string,
-    updateFaqDto: UpdateFaqDto,
-  ): Promise<UpdateResult> {
-    return await this.faqModel.update({ id }, updateFaqDto);
+  async update(id: string, updateFaqDto: UpdateFaqDto): Promise<UpdateResult> {
+    return await this.faqModel.update({ id }, updateFaqDto)
   }
 
   async delete(
-    whereCondition:
-      | FindOptionsWhere<Faq>[]
-      | FindOptionsWhere<Faq> = undefined,
+    whereCondition: FindOptionsWhere<Faq>[] | FindOptionsWhere<Faq> = undefined
   ): Promise<Faq | null> {
-    const faq = await this.faqModel.findOne({ where: whereCondition });
+    const faq = await this.faqModel.findOne({ where: whereCondition })
     if (!faq) {
-      return null;
+      return null
     }
-    await this.faqModel.remove(faq);
-    return faq;
+    await this.faqModel.remove(faq)
+    return faq
   }
 }

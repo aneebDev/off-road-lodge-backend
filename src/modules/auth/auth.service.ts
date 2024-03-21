@@ -19,8 +19,6 @@ import signupUserInterface from './interfaces/signup-user.interface'
 import randomUserTokenInterface from './interfaces/random-user-token.dto'
 import { UsersService } from '../users/users.service'
 import { ConfigService } from '@nestjs/config'
-// import * as twilio from 'twilio'
-// import { TwilioService } from 'nestjs-twilio'
 import { UsersRepository } from '../users/users.respository'
 import { JwtService } from '@nestjs/jwt'
 import { MailService } from '../mail/mail.service'
@@ -68,7 +66,7 @@ export class AuthService {
   //login
   async login(user: User): Promise<JwtTokensInterface> {
     const result = await this.usersService.findUserById(user.id)
-    console.log('result<<<<<<<', result)
+    console.log(result)
     const payload = {
       id: user.id,
       firstName: user.firstName,

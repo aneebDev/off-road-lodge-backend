@@ -50,6 +50,8 @@ export class UsersService {
   //       return this.usersRepository.isOtpActive(email,otp_status);
   //  }
 
+
+  
   //  update password
   async updatePassword(email: string, password: string): Promise<User | null> {
     return this.usersRepository.updatePassword(email, password)

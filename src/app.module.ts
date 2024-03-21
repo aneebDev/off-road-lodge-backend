@@ -5,9 +5,10 @@ import { AuthModule } from './modules/auth/auth.module'
 import { UsersModule } from './modules/users/users.module'
 import { MailerModule } from '@nestjs-modules/mailer'
 import { Module } from '@nestjs/common'
+import { CacheModule } from "@nestjs/common/cache";
+// import { CacheModule } from 'cache-manager';
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { GoogleStrategy } from './strategies/google-auth-strategy'
-import { CacheModule } from '@nestjs/common/cache'
 import { TwilioModule } from 'nestjs-twilio'
 import { join } from 'path'
 import { ServeStaticModule } from '@nestjs/serve-static'
@@ -17,6 +18,11 @@ import { FaqsModule } from './modules/faqs/faqs.module';
 import { ContactUsModule } from './modules/contact-us/contact-us.module';
 import { ContactUs } from './modules/contact-us/entities/contact-us.entity'
 import { Faq } from './modules/faqs/entities/faq.entity'
+import { PostModule } from './modules/post/post.module';
+import { CommentModule } from './modules/comment/comment.module';
+import { userPost } from './modules/post/entities/post.entity'
+import { Comment } from './modules/comment/entities/comment.entity'
+import { likeDislike } from './modules/post/entities/like-dislike.entity'
 
 @Module({
   imports: [
@@ -63,11 +69,13 @@ import { Faq } from './modules/faqs/entities/faq.entity'
     }),
 
     // redis
+    // CacheModule.register({ store: redisStore, uri: process.env.REDIS_URL }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '../../'),
+    //   renderPath: '/asset'
+    // }),
     CacheModule.register({ store: redisStore, uri: process.env.REDIS_URL }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../'),
-      renderPath: '/asset'
-    }),
+
 
     // Database connection
     TypeOrmModule.forRootAsync({
@@ -79,7 +87,7 @@ import { Faq } from './modules/faqs/entities/faq.entity'
         username: configService.get('DATABASE_USERNAME'),
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
-        entities: [User, ContactUs, Faq],
+        entities: [User, ContactUs, Faq, userPost, Comment, likeDislike],
         synchronize: true
       }),
       inject: [ConfigService]
@@ -87,7 +95,11 @@ import { Faq } from './modules/faqs/entities/faq.entity'
 
     FaqsModule,
 
-    ContactUsModule
+    ContactUsModule,
+
+    PostModule,
+
+    CommentModule,
   ],
   controllers: [],
   providers: [GoogleStrategy]
