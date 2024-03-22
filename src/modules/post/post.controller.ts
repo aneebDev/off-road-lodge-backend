@@ -7,7 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
-  NotFoundException, Query
+  NotFoundException,
+  Query
 } from '@nestjs/common'
 import { PostService } from './post.service'
 import { CreatePostDto } from './dto/create-post.dto'
@@ -19,6 +20,8 @@ import { Role } from '../../enums/role.enum'
 import { userPost } from './entities/post.entity'
 import AuthBearer from '../../decorators/auth-bearer.decorators'
 import { likeDislikePostDto } from './dto/like-dislike-post.dto'
+import paginationInterface from './interfaces/pagination.interface'
+import paginationContactInterface from '../contact-us/interfaces/paginationContactInterface'
 
 @ApiTags('Post')
 @Controller('post')
@@ -58,17 +61,28 @@ export class PostController {
     }
   }
 
-
   // Post like count
+  // @ApiBearerAuth()
+  // @ApiQuery({ name: 'page', type: Number, required: true })
+  // @ApiQuery({ name: 'pageSize', type: Number, required: false })
+  // @Get('likeDislikeCount')
+  // async postLikeCount(@Query('page') page = 1, @Query('pageSize') pageSize = 10) : Promise<paginationInterface> {
+  //   return this.postService.postLikeCount(page, pageSize)
+  // }
+
+  //get all contact_us users
   @ApiBearerAuth()
   @ApiQuery({ name: 'page', type: Number, required: true })
   @ApiQuery({ name: 'pageSize', type: Number, required: false })
-  @Get('likeDislikeCount')
-  async postLikeCount(
+  @ApiQuery({ name: 'id', type: String, required: false })
+  @Get('/:all_user')
+  @Roles(Role.CUSTOMER)
+  async getAllContactUsUsers(
     @Query('page') page = 1,
     @Query('pageSize') pageSize = 10,
-  ) {
-    return this.postService.postLikeCount(page, pageSize)
+    @Query('id') id?: string,
+  ): Promise<paginationInterface> {
+    return this.postService.getAllPostsWithPagination(page, pageSize, id);
   }
 
   @ApiBearerAuth()
@@ -125,10 +139,7 @@ export class PostController {
   @ApiBody({ type: likeDislikePostDto })
   @Post('likeDislike')
   // @BlockRoles(BlockRole.UNBLOCK)
-  async createLikeDislike(
-    @Body() Post: likeDislikePostDto,
-    @AuthBearer() accessToken: string,
-  ) {
+  async createLikeDislike(@Body() Post: likeDislikePostDto, @AuthBearer() accessToken: string) {
     return this.postService.createLikeDislike(Post, accessToken)
   }
 }

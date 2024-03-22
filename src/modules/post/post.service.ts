@@ -1,4 +1,10 @@
-import { ConflictException, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common'
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException
+} from '@nestjs/common'
 import { CreatePostDto } from './dto/create-post.dto'
 import { UpdatePostDto } from './dto/update-post.dto'
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere'
@@ -12,16 +18,18 @@ import { JwtService } from '@nestjs/jwt'
 import { UsersRepository } from '../users/users.respository'
 import { likeDislikeRepository } from './repositories/like-dislike.repository'
 import { CACHE_MANAGER } from '@nestjs/common/cache'
-import { Cache } from 'cache-manager';
+import { Cache } from 'cache-manager'
+import paginationContactInterface from '../contact-us/interfaces/paginationContactInterface'
+import paginationInterface from './interfaces/pagination.interface'
 
 @Injectable()
 export class PostService {
-  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache,
-              private postRepository: PostRepository,
-              private jwtService: JwtService,
-              private usersRepository: UsersRepository,
-              private likeDislikeRepository: likeDislikeRepository,
-
+  constructor(
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private postRepository: PostRepository,
+    private jwtService: JwtService,
+    private usersRepository: UsersRepository,
+    private likeDislikeRepository: likeDislikeRepository
   ) {}
   // create Post for User
   create(createPostDto: CreatePostDto): Promise<userPost> {
@@ -55,69 +63,84 @@ export class PostService {
   }
 
   //like dislike submit post
-    async createLikeDislike(
-    likeDislikeInterface: likeDislikeInterface,
-    accessToken: string,
-  ) {
+  async createLikeDislike(likeDislikeInterface: likeDislikeInterface, accessToken: string) {
     const decoded = await this.jwtService.verify(accessToken, {
-      secret: jwtConstants.secret,
-    });
-    const user = await this.usersRepository.findUserById(decoded.id);
+      secret: jwtConstants.secret
+    })
+    const user = await this.usersRepository.findUserById(decoded.id)
     if (!user) {
-      throw new NotFoundException('invalid user');
+      throw new NotFoundException('invalid user')
     }
-      const cachedToken = await this.cacheManager.get(accessToken);
+    const cachedToken = await this.cacheManager.get(accessToken)
     if (!cachedToken) {
-      throw new UnauthorizedException('Token expired');
+      throw new UnauthorizedException('Token expired')
     }
 
-    const post = await this.postRepository.postById(
-      likeDislikeInterface.postId,
-    );
+    const post = await this.postRepository.postById(likeDislikeInterface.postId)
     if (!post) {
-      throw new NotFoundException('invalid post id');
+      throw new NotFoundException('invalid post id')
     }
 
-    const existingLikeDislike =
-      await this.likeDislikeRepository.findLikeDislikeByUser(decoded.id);
+    const existingLikeDislike = await this.likeDislikeRepository.findLikeDislikeByUser(decoded.id)
     if (existingLikeDislike.length > 0) {
-      const submittedPostIds = existingLikeDislike.map(
-        (post) => post.postId,
-      );
+      const submittedPostIds = existingLikeDislike.map(post => post.postId)
       if (submittedPostIds.includes(likeDislikeInterface.postId)) {
         const result = await this.likeDislikeRepository.postCheck(
           decoded.id,
-          likeDislikeInterface.postId,
-        );
+          likeDislikeInterface.postId
+        )
         if (result.type === 'like') {
-          result.type = 'liked';
+          result.type = 'liked'
         } else if (result.type === 'report') {
-          result.type = 'reported';
+          result.type = 'reported'
         } else if (result.type === 'dislike') {
-          result.type = 'disliked';
+          result.type = 'disliked'
         }
-        throw new ConflictException(`Already ${result.type}.`);
+        throw new ConflictException(`Already ${result.type}.`)
       }
     }
-      post.likeCount++;
-      await this.postRepository.savePost(post);
+    post.likeCount++
+    await this.postRepository.savePost(post)
 
-      const likedislike = { ...likeDislikeInterface, userId: decoded.id, likeCount: post.likeCount };
-      return await this.likeDislikeRepository.createLikeDislike(likedislike);
+    const likedislike = { ...likeDislikeInterface, userId: decoded.id, likeCount: post.likeCount }
+    return await this.likeDislikeRepository.createLikeDislike(likedislike)
   }
 
   //  post like count
-  async postLikeCount(pageNumber: number, pageSize: number) {
-    const skip = (pageNumber - 1) * pageSize;
+  // async postLikeCount(pageNumber: number, pageSize: number) {
+  //   const skip = (pageNumber - 1) * pageSize
+  //
+  //   const [result, totalCount] = await this.postRepository.postLikeCount(skip, pageSize)
+  //   console.log("result<<<<", result)
+  //   console.log("totalCount<<<<", totalCount)
+  //   const totalPages = Math.ceil(totalCount / pageSize)
+  //   if (result.length === 0) {
+  //     throw new NotFoundException('Data not found according to your criteria')
+  //   }
+  //   return {
+  //     records: result,
+  //     totalRecords: totalCount,
+  //     totalPages,
+  //     currentPage: pageNumber
+  //   }
+  // }
 
-    const [result, totalCount] = await this.postRepository.postLikeCount(
+  // ADMIN API
+  //get all contactus users
+  async getAllPostsWithPagination(
+    pageNumber: number,
+    pageSize?: number,
+    id?: string,
+  ): Promise<paginationInterface> {
+    const skip = (pageNumber - 1) * pageSize;
+    const [result, totalCount] = await this.postRepository.findAndCount(
       skip,
       pageSize,
+      id,
     );
-
     const totalPages = Math.ceil(totalCount / pageSize);
     if (result.length === 0) {
-      throw new NotFoundException('Data not found according to your criteria');
+      throw new NotFoundException('No records found');
     }
     return {
       records: result,

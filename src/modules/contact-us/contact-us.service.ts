@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { CreateContactUsDto } from './dto/create-contact-us.dto'
 import { ContactUsRepository } from './contact-us.repository'
 import { ContactUs } from './entities/contact-us.entity'
@@ -6,6 +6,7 @@ import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere'
 import { FindOptionsOrder } from 'typeorm/find-options/FindOptionsOrder'
 import { FindOptionsSelect } from 'typeorm/find-options/FindOptionsSelect'
 import { UpdateContactUsDto } from './dto/update-contact-us.dto'
+import paginationContactInterface from './interfaces/paginationContactInterface'
 
 @Injectable()
 export class ContactUsService {
@@ -40,4 +41,29 @@ export class ContactUsService {
   delete(whereCondition: FindOptionsWhere<ContactUs>[] | FindOptionsWhere<ContactUs> = undefined) {
     return this.contactUsRepository.delete(whereCondition)
   }
+  // ADMIN API
+  //get all contactus users
+  async getAllContactUsUsers(
+    pageNumber: number,
+    pageSize?: number,
+    email?: string,
+  ): Promise<paginationContactInterface> {
+    const skip = (pageNumber - 1) * pageSize;
+    const [result, totalCount] = await this.contactUsRepository.findAndCount(
+      skip,
+      pageSize,
+      email,
+    );
+    const totalPages = Math.ceil(totalCount / pageSize);
+    if (result.length === 0) {
+      throw new NotFoundException('No records found');
+    }
+    return {
+      records: result,
+      totalRecords: totalCount,
+      totalPages,
+      currentPage: pageNumber,
+    };
+  }
+
 }

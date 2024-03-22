@@ -7,18 +7,17 @@ import {
   Param,
   Delete,
   UseGuards,
-  NotFoundException,
-  InternalServerErrorException
+  NotFoundException, Query
 } from '@nestjs/common'
 import { ContactUsService } from './contact-us.service'
 import { CreateContactUsDto } from './dto/create-contact-us.dto'
 import { UpdateContactUsDto } from './dto/update-contact-us.dto'
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard'
 import { Roles } from '../../decorators/role.decorators'
 import { Role } from '../../enums/role.enum'
 import { ContactUs } from './entities/contact-us.entity'
-import { UpdateResult } from 'typeorm'
+import paginationContactInterface from './interfaces/paginationContactInterface'
 
 @ApiTags('ContactUs')
 @Controller('contact-us')
@@ -56,6 +55,21 @@ export class ContactUsController {
       message: 'ContactUs fetched successfully',
       contactUs
     }
+  }
+
+  //get all contact_us users
+  @ApiBearerAuth()
+  @ApiQuery({ name: 'page', type: Number, required: true })
+  @ApiQuery({ name: 'pageSize', type: Number, required: false })
+  @ApiQuery({ name: 'email', type: String, required: false })
+  @Get('/:all_user')
+  @Roles(Role.CUSTOMER)
+  async getAllContactUsUsers(
+    @Query('page') page = 1,
+    @Query('pageSize') pageSize = 10,
+    @Query('email') email?: string,
+  ): Promise<paginationContactInterface> {
+    return this.contactUsService.getAllContactUsUsers(page, pageSize, email);
   }
 
   @ApiBearerAuth()

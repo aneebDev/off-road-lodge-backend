@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository, UpdateResult } from 'typeorm'
+import { Like, Repository, UpdateResult } from 'typeorm'
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere'
 import { FindOptionsOrder } from 'typeorm/find-options/FindOptionsOrder'
 import { FindOptionsSelect } from 'typeorm/find-options/FindOptionsSelect'
@@ -42,6 +42,30 @@ export class ContactUsRepository {
       relations: relationships
     })
   }
+
+  // ADMIN API
+  //get all contactus users for Admin API
+  async findAndCount(
+    skip: number,
+    take: number,
+    email?: string,
+  ): Promise<[ContactUs[], number]> {
+    const whereConditions: any[] = [];
+    if (email) {
+      whereConditions.push({
+        email: Like(`${email}%`),
+      });
+    }
+    const [result, totalCount] = await this.contactUsModel.findAndCount({
+      where: whereConditions,
+      skip,
+      take,
+      order: { createdAt: 'DESC' },
+    });
+
+    return [result, totalCount];
+  }
+
 
   async update(id: string, updateContactUsDto: UpdateContactUsDto): Promise<UpdateResult> {
     return await this.contactUsModel.update({ id }, updateContactUsDto)
