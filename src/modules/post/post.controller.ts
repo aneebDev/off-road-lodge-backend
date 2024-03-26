@@ -77,7 +77,7 @@ export class PostController {
   @ApiQuery({ name: 'id', type: String, required: false })
   @Get('/:all_user')
   @Roles(Role.CUSTOMER)
-  async getAllContactUsUsers(
+  async getAllPosts(
     @Query('page') page = 1,
     @Query('pageSize') pageSize = 10,
     @Query('id') id?: string,

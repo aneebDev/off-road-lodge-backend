@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Like, Repository, UpdateResult } from 'typeorm'
+import { Repository, UpdateResult } from 'typeorm'
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere'
 import { FindOptionsOrder } from 'typeorm/find-options/FindOptionsOrder'
 import { FindOptionsSelect } from 'typeorm/find-options/FindOptionsSelect'
 import { userPost } from './entities/post.entity'
 import { CreatePostDto } from './dto/create-post.dto'
 import { UpdatePostDto } from './dto/update-post.dto'
-import { ContactUs } from '../contact-us/entities/contact-us.entity'
 
 @Injectable()
 export class PostRepository {

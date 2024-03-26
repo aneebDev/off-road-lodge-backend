@@ -19,7 +19,6 @@ import { UsersRepository } from '../users/users.respository'
 import { likeDislikeRepository } from './repositories/like-dislike.repository'
 import { CACHE_MANAGER } from '@nestjs/common/cache'
 import { Cache } from 'cache-manager'
-import paginationContactInterface from '../contact-us/interfaces/paginationContactInterface'
 import paginationInterface from './interfaces/pagination.interface'
 
 @Injectable()
@@ -49,7 +48,7 @@ export class PostService {
     return await this.postRepository.findOneById(whereCondition)
   }
 
-  // get one FAQ by id
+  // get one POST by id
   findOneById(id: string, relationShips: string[] = []) {
     return this.postRepository.findOneById({ id }, relationShips)
   }

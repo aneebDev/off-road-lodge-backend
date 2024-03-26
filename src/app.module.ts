@@ -6,7 +6,6 @@ import { UsersModule } from './modules/users/users.module'
 import { MailerModule } from '@nestjs-modules/mailer'
 import { Module } from '@nestjs/common'
 import { CacheModule } from "@nestjs/common/cache";
-// import { CacheModule } from 'cache-manager';
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { GoogleStrategy } from './strategies/google-auth-strategy'
 import { TwilioModule } from 'nestjs-twilio'
@@ -23,6 +22,12 @@ import { CommentModule } from './modules/comment/comment.module';
 import { userPost } from './modules/post/entities/post.entity'
 import { Comment } from './modules/comment/entities/comment.entity'
 import { likeDislike } from './modules/post/entities/like-dislike.entity'
+import { PlaceModule } from './modules/place/place.module';
+import { AtvModule } from './modules/atv/atv.module';
+import { Place } from './modules/place/entities/place.entity'
+import { GuidedToursModule } from './modules/guided-tours/guided-tours.module';
+import { Atv } from './modules/atv/entities/atv.entity'
+import { GuidedTour } from './modules/guided-tours/entities/guided-tour.entity'
 
 @Module({
   imports: [
@@ -87,7 +92,7 @@ import { likeDislike } from './modules/post/entities/like-dislike.entity'
         username: configService.get('DATABASE_USERNAME'),
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
-        entities: [User, ContactUs, Faq, userPost, Comment, likeDislike],
+        entities: [User, ContactUs, Faq, userPost, Comment, likeDislike, Place, Atv, GuidedTour],
         synchronize: true
       }),
       inject: [ConfigService]
@@ -100,6 +105,12 @@ import { likeDislike } from './modules/post/entities/like-dislike.entity'
     PostModule,
 
     CommentModule,
+
+    PlaceModule,
+
+    AtvModule,
+
+    GuidedToursModule,
   ],
   controllers: [],
   providers: [GoogleStrategy]
