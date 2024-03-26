@@ -5,91 +5,91 @@ import { PlaceTypes, StayTypes } from '../entities/place.entity'
 export class CreatePlaceDto {
   @ApiProperty()
   @IsEnum(PlaceTypes)
-  place: string;
+  place: string
 
   @ApiProperty()
   @IsEnum(StayTypes)
-  placeType: string;
+  placeType: string
 
   @ApiProperty()
   @IsLatitude()
-  latitude: number;
+  latitude: number
 
   @ApiProperty()
   @IsLongitude()
-  longitude: number;
+  longitude: number
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  country: string;
+  country: string
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  address: string;
+  address: string
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  stayType: string;
+  stayType: string
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  city: string;
+  city: string
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  url: string;
+  url: string
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  guests: string;
+  guests: string
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  bedroom: string;
+  bedroom: string
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  beds: string;
+  beds: string
 
   @ApiProperty()
   @IsString({ each: true })
   @IsNotEmpty()
-  bedSize: string[];
+  bedSize: string[]
 
   @ApiProperty()
   @IsBoolean()
-  bedroomLock: boolean;
+  bedroomLock: boolean
 
   @ApiProperty()
   @IsString({ each: true })
   @IsNotEmpty()
-  offering: string[];
+  offering: string[]
 
   @ApiProperty()
   @IsString({ each: true })
   @IsNotEmpty()
-  imageUrls: string[];
+  imageUrls: string[]
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  placeTitle: string;
+  placeTitle: string
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  placeDescription: string;
+  placeDescription: string
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  price: string;
+  price: string
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common'
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere'
 import { FindOptionsOrder } from 'typeorm/find-options/FindOptionsOrder'
 import { FindOptionsSelect } from 'typeorm/find-options/FindOptionsSelect'
@@ -9,8 +9,7 @@ import { UpdateAtvDto } from './dto/update-atv.dto'
 
 @Injectable()
 export class AtvService {
-  constructor(private  atvRepository: AtvRepository) {
-  }
+  constructor(private atvRepository: AtvRepository) {}
 
   // create Atv for User
   create(createAtvDto: CreateAtvDto): Promise<Atv> {

@@ -8,7 +8,6 @@ import { GuidedTour } from './entities/guided-tour.entity'
 import { CreateGuidedTourDto } from './dto/create-guided-tour.dto'
 import { UpdateGuidedTourDto } from './dto/update-guided-tour.dto'
 
-
 @Injectable()
 export class GuidedToursRepository {
   constructor(@InjectRepository(GuidedTour) private guidedTourModel: Repository<GuidedTour>) {}
@@ -70,28 +69,23 @@ export class GuidedToursRepository {
 
   // ADMIN API
   //get all GuidedTour for Admin API
-  async findAndCount(
-    skip: number,
-    take: number,
-    id?: string,
-  ): Promise<[GuidedTour[], number]> {
-    const whereConditions: any = {};
+  async findAndCount(skip: number, take: number, id?: string): Promise<[GuidedTour[], number]> {
+    const whereConditions: any = {}
     // if (id) {
     //   whereConditions.push({
     //     id: Like(`${id}%`),
     //   });
     // }
     if (id !== undefined) {
-      whereConditions.id = id;
+      whereConditions.id = id
     }
     const [result, totalCount] = await this.guidedTourModel.findAndCount({
       where: whereConditions,
       skip,
       take,
-      order: { createdAt: 'DESC' },
-    });
+      order: { createdAt: 'DESC' }
+    })
 
-    return [result, totalCount];
+    return [result, totalCount]
   }
-
 }

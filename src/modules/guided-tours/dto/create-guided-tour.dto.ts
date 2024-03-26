@@ -1,50 +1,50 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsLatitude, IsLongitude, IsNotEmpty, IsString, IsNumber, IsBoolean } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger'
+import { IsLatitude, IsLongitude, IsNotEmpty, IsString, IsNumber, IsBoolean } from 'class-validator'
 
 export class CreateGuidedTourDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  title: string;
+  title: string
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  duration: string;
+  duration: string
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  startLocation: string;
+  startLocation: string
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  cost: string;
+  cost: string
 
   @ApiProperty()
   @IsNumber()
-  people: number;
+  people: number
 
   @ApiProperty()
   @IsBoolean()
-  group: boolean;
+  group: boolean
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  description: string;
+  description: string
 
   @ApiProperty()
   @IsLatitude()
-  latitude: number;
+  latitude: number
 
   @ApiProperty()
   @IsLongitude()
-  longitude: number;
+  longitude: number
 
   @ApiProperty()
   @IsString({ each: true })
   @IsNotEmpty()
-  imageUrls: string[];
+  imageUrls: string[]
 }

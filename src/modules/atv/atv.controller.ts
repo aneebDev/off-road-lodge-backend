@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, NotFoundException } from '@nestjs/common'
-import { AtvService } from './atv.service';
-import { CreateAtvDto } from './dto/create-atv.dto';
-import { UpdateAtvDto } from './dto/update-atv.dto';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  NotFoundException
+} from '@nestjs/common'
+import { AtvService } from './atv.service'
+import { CreateAtvDto } from './dto/create-atv.dto'
+import { UpdateAtvDto } from './dto/update-atv.dto'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard'
 import { Roles } from '../../decorators/role.decorators'

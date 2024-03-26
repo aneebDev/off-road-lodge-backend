@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { CreatePlaceDto } from './dto/create-place.dto';
-import { UpdatePlaceDto } from './dto/update-place.dto';
+import { Injectable } from '@nestjs/common'
+import { CreatePlaceDto } from './dto/create-place.dto'
+import { UpdatePlaceDto } from './dto/update-place.dto'
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere'
 import { FindOptionsOrder } from 'typeorm/find-options/FindOptionsOrder'
 import { FindOptionsSelect } from 'typeorm/find-options/FindOptionsSelect'
@@ -9,9 +9,7 @@ import { Place } from './entities/place.entity'
 
 @Injectable()
 export class PlaceService {
-  constructor(
-    private placeRepository: PlaceRepository,
-  ) {}
+  constructor(private placeRepository: PlaceRepository) {}
   // create Place for User
   create(createPlaceDto: CreatePlaceDto): Promise<Place> {
     return this.placeRepository.create(createPlaceDto)

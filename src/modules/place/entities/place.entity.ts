@@ -9,13 +9,13 @@ export enum PlaceTypes {
   FARMHOUSE = 'FARMHOUSE',
   CABIN = 'CABIN',
   CONTAINER = 'CONTAINER',
-  RV = 'RV',
+  RV = 'RV'
 }
 
 export enum StayTypes {
   DEFAULT = 'An entire place. (Default)',
   ROOM = 'ROOM',
-  SHARED = 'SHARED',
+  SHARED = 'SHARED'
 }
 
 @Entity({ name: 'places' })
@@ -25,12 +25,12 @@ export class Place {
   id: string
 
   @ApiProperty()
-  @Column({ type: 'enum', enum: PlaceTypes})
+  @Column({ type: 'enum', enum: PlaceTypes })
   @IsEnum(PlaceTypes)
   place: string
 
   @ApiProperty()
-  @Column({ type: 'enum', enum: StayTypes})
+  @Column({ type: 'enum', enum: StayTypes })
   placeType: string
 
   @ApiProperty()
@@ -77,19 +77,19 @@ export class Place {
 
   @ApiProperty()
   @Column({ type: 'text', array: true, nullable: false })
-  bedSize: string[];
+  bedSize: string[]
 
   @ApiProperty()
-  @Column({ type: Boolean})
+  @Column({ type: Boolean })
   bedroomLock: boolean
 
   @ApiProperty()
   @Column({ type: 'text', array: true, nullable: false })
-  offering: string[];
+  offering: string[]
 
   @ApiProperty()
   @Column({ type: 'text', array: true, nullable: false })
-  imageUrls: string[];
+  imageUrls: string[]
 
   // // Method to convert array of image URLs to comma-separated string
   // setImageUrls(urls: string[]) {

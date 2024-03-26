@@ -4,7 +4,6 @@ import { IsLatitude, IsLongitude } from 'class-validator'
 
 @Entity('guidedtours')
 export class GuidedTour {
-
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
   id: string
@@ -25,7 +24,7 @@ export class GuidedTour {
   @Column()
   people: number
   @ApiProperty()
-  @Column({ type: Boolean})
+  @Column({ type: Boolean })
   group: boolean
   @ApiProperty()
   @Column({ type: 'text' })
@@ -43,7 +42,7 @@ export class GuidedTour {
 
   @ApiProperty()
   @Column({ type: 'text', array: true, nullable: false })
-  imageUrls: string[];
+  imageUrls: string[]
 
   @ApiProperty()
   @CreateDateColumn()

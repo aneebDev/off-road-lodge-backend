@@ -8,7 +8,6 @@ import { Atv } from './entities/atv.entity'
 import { UpdateAtvDto } from './dto/update-atv.dto'
 import { CreateAtvDto } from './dto/create-atv.dto'
 
-
 @Injectable()
 export class AtvRepository {
   constructor(@InjectRepository(Atv) private atvModel: Repository<Atv>) {}
@@ -66,28 +65,23 @@ export class AtvRepository {
 
   // ADMIN API
   //get all contactus users for Admin API
-  async findAndCount(
-    skip: number,
-    take: number,
-    id?: string,
-  ): Promise<[Atv[], number]> {
-    const whereConditions: any = {};
+  async findAndCount(skip: number, take: number, id?: string): Promise<[Atv[], number]> {
+    const whereConditions: any = {}
     // if (id) {
     //   whereConditions.push({
     //     id: Like(`${id}%`),
     //   });
     // }
     if (id !== undefined) {
-      whereConditions.id = id;
+      whereConditions.id = id
     }
     const [result, totalCount] = await this.atvModel.findAndCount({
       where: whereConditions,
       skip,
       take,
-      order: { createdAt: 'DESC' },
-    });
+      order: { createdAt: 'DESC' }
+    })
 
-    return [result, totalCount];
+    return [result, totalCount]
   }
-
 }

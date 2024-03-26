@@ -93,5 +93,5 @@ export class CreateAtvDto {
   @ApiProperty()
   @IsString({ each: true })
   @IsNotEmpty()
-  imageUrls: string[];
+  imageUrls: string[]
 }

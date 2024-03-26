@@ -101,28 +101,23 @@ export class PlaceRepository {
 
   // ADMIN API
   //get all contactus users for Admin API
-  async findAndCount(
-    skip: number,
-    take: number,
-    id?: string,
-  ): Promise<[Place[], number]> {
-    const whereConditions: any = {};
+  async findAndCount(skip: number, take: number, id?: string): Promise<[Place[], number]> {
+    const whereConditions: any = {}
     // if (id) {
     //   whereConditions.push({
     //     id: Like(`${id}%`),
     //   });
     // }
     if (id !== undefined) {
-      whereConditions.id = id;
+      whereConditions.id = id
     }
     const [result, totalCount] = await this.placeModel.findAndCount({
       where: whereConditions,
       skip,
       take,
-      order: { createdAt: 'DESC' },
-    });
+      order: { createdAt: 'DESC' }
+    })
 
-    return [result, totalCount];
+    return [result, totalCount]
   }
-
 }
