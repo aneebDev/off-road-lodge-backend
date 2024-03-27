@@ -1,26 +1,45 @@
 import { Injectable } from '@nestjs/common'
 import { CreateGuidedTourDto } from './dto/create-guided-tour.dto'
 import { UpdateGuidedTourDto } from './dto/update-guided-tour.dto'
+import { Atv } from '../atv/entities/atv.entity'
+import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere'
+import { FindOptionsOrder } from 'typeorm/find-options/FindOptionsOrder'
+import { FindOptionsSelect } from 'typeorm/find-options/FindOptionsSelect'
+import { GuidedToursRepository } from './guided-tours.repository'
+import { GuidedTour } from './entities/guided-tour.entity'
 
 @Injectable()
 export class GuidedToursService {
-  create(createGuidedTourDto: CreateGuidedTourDto) {
-    return 'This action adds a new guidedTour'
+  constructor(private guidedToursRepository: GuidedToursRepository) {}
+
+  // create GuidedTour for User
+  create(createGuidedTourDto: CreateGuidedTourDto): Promise<GuidedTour> {
+    return this.guidedToursRepository.create(createGuidedTourDto)
   }
 
-  findAll() {
-    return `This action returns all guidedTours`
+  // get all GuidedTour
+  findAll(
+    whereCondition: FindOptionsWhere<Atv>[] | FindOptionsWhere<GuidedTour> = undefined,
+    relationShips: string[] = [],
+    order: FindOptionsOrder<GuidedTour> = {},
+    select: FindOptionsSelect<GuidedTour> = {}
+  ) {
+    return this.guidedToursRepository.findAll(whereCondition, relationShips, order, select)
+  }
+  async findBy(whereCondition) {
+    return await this.guidedToursRepository.findOneById(whereCondition)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} guidedTour`
+  // get one GuidedTour by id
+  findOneById(id: string, relationShips: string[] = []) {
+    return this.guidedToursRepository.findOneById({ id }, relationShips)
   }
 
-  update(id: number, updateGuidedTourDto: UpdateGuidedTourDto) {
-    return `This action updates a #${id} guidedTour`
+  update(id: string, updateGuidedTourDto: UpdateGuidedTourDto) {
+    return this.guidedToursRepository.update(id, updateGuidedTourDto)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} guidedTour`
+  delete(whereCondition: FindOptionsWhere<GuidedTour>[] | FindOptionsWhere<GuidedTour> = undefined) {
+    return this.guidedToursRepository.delete(whereCondition)
   }
 }
